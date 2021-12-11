@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from curtsies.fmtfuncs import bold
+
 
 class SquareGrid:
     def __init__(self, points: dict[tuple, int], size: int):
@@ -50,7 +52,7 @@ class SquareGrid:
         return "\n".join(output)
 
 
-with open("input") as fin:
+with open("test-input") as fin:
     lines = [line.strip() for line in fin.readlines()]
 
 grid = SquareGrid.from_strings(lines)
@@ -58,12 +60,18 @@ grid = SquareGrid.from_strings(lines)
 total_flashes = 0
 all_flashed = None
 flashes = set()
-for t in range(400):
+for t in range(10):
     print(f"After step {t}:")
-    print(flashes)
     if len(flashes) == grid.size**2 and all_flashed is None:
         all_flashed = t
-    print(grid)
+    for y in range(grid.size):
+        line = []
+        for x in range(grid.size):
+            if (x, y) in flashes:
+                line.append(bold(str(grid.points[(x, y)])))
+            else:
+                line.append((str(grid.points[(x, y)])))
+        print("".join(str(char) for char in line))
     flashes = grid.tick()
     total_flashes += len(flashes)
 
